@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Smart Job Recommendation{% endblock %}
+
+{% block body %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <i class="bi bi-briefcase-fill"></i>
+            <h2>SmartJob</h2>
+        </div>
+        <h4 class="auth-title">Welcome back</h4>
+        <p class="auth-subtitle">Sign in to your account</p>
+        
+        <form method="POST" novalidate>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="mb-3">
+                <label class="form-label">Email Address</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" name="email" class="form-control" placeholder="you@example.com" required autocomplete="email">
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" class="form-control" placeholder="Enter your password" required id="passwordInput" autocomplete="current-password">
+                    <button type="button" class="input-group-text password-toggle" data-target="passwordInput" aria-label="Toggle password visibility">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 mb-3">Sign In</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p class="mb-0">Don't have an account? <a href="/signup" class="fw-semibold">Create one</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

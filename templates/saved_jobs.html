@@ -1,0 +1,56 @@
+{% extends "base_dashboard.html" %}
+{% block page_title %}Saved Jobs{% endblock %}
+{% block dashboard_content %}
+<p class="text-muted mb-3">{{ total_count }} saved job{{ 's' if total_count != 1 else '' }}</p>
+{% if jobs %}
+<div class="row g-3">
+    {% for job in jobs %}
+    <div class="col-lg-6">
+        <div class="card job-card h-100">
+            <div class="card-body d-flex flex-column">
+                <a href="/jobs/{{ job.id }}" class="job-title text-decoration-none fw-semibold fs-5">{{ job.title }}</a>
+                <div class="job-company text-muted small"><i class="bi bi-building me-1"></i>{{ job.company }}</div>
+                <div class="job-meta my-2 small text-muted d-flex flex-wrap gap-2">
+                    {% if job.location %}<span class="job-meta-item"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</span>{% endif %}
+                    <span class="job-meta-item"><i class="bi bi-briefcase me-1"></i>{{ job.job_type }}</span>
+                    <span class="job-meta-item"><i class="bi bi-bar-chart me-1"></i>{{ job.experience_level }}</span>
+                    {% if job.salary_lpa %}<span class="job-meta-item"><i class="bi bi-currency-rupee me-1"></i>{{ job.salary_lpa }} LPA</span>{% endif %}
+                </div>
+                {% if job.required_skills %}
+                <div class="mb-2">
+                    {% for skill in job.required_skills.split(',')[:5] %}
+                    <span class="skill-chip neutral">{{ skill.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="d-flex flex-wrap justify-content-between align-items-center mt-auto pt-3 border-top">
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="/jobs/{{ job.id }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye me-1"></i>View Details</a>
+                        {% if job.application_url %}
+                        <a href="/jobs/{{ job.id }}/redirect" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary" title="Open original job posting / employer page">
+                            <i class="bi bi-box-arrow-up-right me-1"></i>Original Link
+                        </a>
+                        {% endif %}
+                    </div>
+                    <form action="/jobs/save/{{ job.id }}" method="POST" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-bookmark-x me-1"></i>Unsave</button>
+                    </form>
+                </div>
+                <small class="text-muted d-block mt-2">Saved {{ job.saved_at.strftime('%b %d, %Y') if job.saved_at else '' }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card"><div class="card-body">
+    <div class="empty-state py-5">
+        <i class="bi bi-bookmark empty-state-icon"></i>
+        <p class="empty-state-title fw-semibold">No saved jobs yet</p>
+        <p class="empty-state-text text-muted small">Browse recommendations and save jobs you're interested in</p>
+        <a href="/recommendations" class="btn btn-primary mt-2">View Recommendations</a>
+    </div>
+</div></div>
+{% endif %}
+{% endblock %}

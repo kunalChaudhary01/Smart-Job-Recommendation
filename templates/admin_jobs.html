@@ -1,0 +1,263 @@
+{% extends "base_dashboard.html" %}
+{% block page_title %}Manage Jobs & Candidate Applications{% endblock %}
+{% block dashboard_content %}
+<div class="row g-4">
+    <!-- Left Column: Automatic Importer, Skill Extractor & Manual Form -->
+    <div class="col-lg-5">
+        <!-- 1. Automated Real-Time Job Feed Importer -->
+        <div class="card mb-4 shadow-sm border-0" style="border-radius: 12px; border-left: 4px solid #2563EB !important;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h6 class="fw-bold mb-0 text-primary"><i class="bi bi-cloud-arrow-down-fill me-2 fs-5"></i>Automated Feed Importer</h6>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 small">Remote & India Only</span>
+                </div>
+                <p class="small text-muted mb-3">
+                    Automatically fetch verified tech job postings strictly restricted to <strong>Remote / Worldwide</strong> roles and <strong>India-based</strong> engineering hubs (Bengaluru, Hyderabad, Pune, Mumbai, Delhi, etc.). Non-remote foreign jobs are filtered out.
+                </p>
+                <form method="POST" action="/admin/jobs/auto-import">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <label class="small text-muted mb-0 fw-semibold">Import Count:</label>
+                        <select name="limit" class="form-select form-select-sm" style="width: 110px;">
+                            <option value="5">5 jobs</option>
+                            <option value="15" selected>15 jobs</option>
+                            <option value="30">30 jobs</option>
+                            <option value="50">50 jobs</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-semibold">
+                        <i class="bi bi-arrow-repeat me-1"></i>Fetch & Auto-Import Now
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 2. Skill Extractor Helper -->
+        <div class="card mb-4 shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-1"><i class="bi bi-cpu me-2 text-primary"></i>Skill Extractor Tool</h6>
+                <p class="small text-muted mb-2">Paste any job description to automatically identify and extract technical skills.</p>
+                <form method="POST" action="/admin/jobs/extract-skills">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <textarea name="description" class="form-control mb-2" rows="3" placeholder="Paste raw job description..." required>{{ description or '' }}</textarea>
+                    <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-magic me-1"></i>Extract Skills</button>
+                </form>
+                {% if extracted_skills %}
+                <div class="mt-3 p-2 bg-light rounded">
+                    <small class="text-muted d-block mb-1 fw-medium">Extracted Skills:</small>
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for skill in extracted_skills.split(', ') %}
+                        <span class="skill-chip matched">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 3. Manual Job Creation -->
+        <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-plus-circle me-2 text-success"></i>Add Job Manually</h6>
+                <form method="POST" action="/admin/jobs/add">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-2">
+                        <label class="form-label small mb-1 fw-bold">Job Title *</label>
+                        <input type="text" name="title" class="form-control" placeholder="Software Engineer" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small mb-1 fw-bold">Company *</label>
+                        <input type="text" name="company" class="form-control" placeholder="Company Name" required>
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-6">
+                            <label class="form-label small mb-1 fw-bold">Location</label>
+                            <input type="text" name="location" class="form-control" placeholder="e.g. Remote, Bangalore">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small mb-1 fw-bold">Salary (LPA)</label>
+                            <input type="number" step="0.01" name="salary_lpa" class="form-control" placeholder="e.g. 12.5">
+                        </div>
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-6">
+                            <label class="form-label small mb-1 fw-bold">Job Type</label>
+                            <select name="job_type" class="form-select">
+                                <option value="Full-time">Full-time</option>
+                                <option value="Part-time">Part-time</option>
+                                <option value="Contract">Contract</option>
+                                <option value="Internship">Internship</option>
+                                <option value="Remote">Remote</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small mb-1 fw-bold">Experience Level</label>
+                            <select name="experience_level" class="form-select">
+                                <option value="Entry Level">Entry Level</option>
+                                <option value="Mid Level">Mid Level</option>
+                                <option value="Senior Level">Senior Level</option>
+                                <option value="Lead">Lead</option>
+                                <option value="Manager">Manager</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small mb-1 fw-bold">Category</label>
+                        <input type="text" name="category" class="form-control" placeholder="Engineering, Data & AI, etc.">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small mb-1 fw-bold">Required Skills (comma-separated)</label>
+                        <input type="text" name="required_skills" class="form-control" placeholder="python, sql, flask, git" value="{{ extracted_skills or '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small mb-1 fw-bold">Description</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Overview of the role...">{{ description or '' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 fw-semibold"><i class="bi bi-check2 me-1"></i>Save Job Opening</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Candidate Applications & Active Jobs Table -->
+    <div class="col-lg-7">
+        <!-- Candidate Applications Section -->
+        <div class="card mb-4 shadow-sm border-0" id="applications-section" style="border-radius: 12px;">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-people-fill text-primary me-2"></i>Candidate Applications ({{ applications|length }})
+                    </h5>
+                    <span class="badge bg-primary px-2 py-1 small">Live Pipeline</span>
+                </div>
+
+                {% if applications %}
+                <div class="table-responsive">
+                    <table class="table align-middle table-hover small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Role</th>
+                                <th>Applied Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications %}
+                            <tr>
+                                <td>
+                                    <div class="fw-bold text-dark">{{ app.candidate_name }}</div>
+                                    <div class="text-muted">{{ app.candidate_email }}</div>
+                                    {% if app.candidate_phone %}<div class="text-muted small">{{ app.candidate_phone }}</div>{% endif %}
+                                    {% if app.resume_name %}
+                                    <div class="mt-1">
+                                        <span class="badge bg-light text-dark border small">
+                                            <i class="bi bi-file-earmark-pdf text-danger me-1"></i>{{ app.resume_name }}
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">{{ app.job_title }}</div>
+                                    <small class="text-muted">{{ app.job_company }}</small>
+                                    {% if app.cover_note %}
+                                    <div class="text-secondary fst-italic mt-1 text-truncate" style="max-width: 180px;" title="{{ app.cover_note }}">
+                                        "{{ app.cover_note }}"
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td>{{ app.applied_at.strftime('%b %d, %Y') if app.applied_at else '' }}</td>
+                                <td>
+                                    {% if app.status == 'Applied' %}
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Applied</span>
+                                    {% elif app.status == 'Under Review' %}
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Under Review</span>
+                                    {% elif app.status == 'Interview' %}
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle">Interview</span>
+                                    {% elif app.status == 'Accepted' %}
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">Accepted</span>
+                                    {% elif app.status == 'Rejected' %}
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Rejected</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ app.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form action="/admin/applications/{{ app.application_id }}/status" method="POST" class="d-flex gap-1">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <select name="status" class="form-select form-select-sm" style="width: 120px;" onchange="this.form.submit()">
+                                            <option value="Applied" {% if app.status == 'Applied' %}selected{% endif %}>Applied</option>
+                                            <option value="Under Review" {% if app.status == 'Under Review' %}selected{% endif %}>Review</option>
+                                            <option value="Interview" {% if app.status == 'Interview' %}selected{% endif %}>Interview</option>
+                                            <option value="Accepted" {% if app.status == 'Accepted' %}selected{% endif %}>Accept</option>
+                                            <option value="Rejected" {% if app.status == 'Rejected' %}selected{% endif %}>Reject</option>
+                                        </select>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted small">
+                    <i class="bi bi-inbox fs-3 d-block mb-1"></i>
+                    No candidates have applied yet. Once candidates submit an application, they will appear here.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- All Jobs Table -->
+        <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-list-ul me-2"></i>Job Listings ({{ jobs|length }})</h5>
+                    <a href="/jobs" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye me-1"></i>Public View</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle table-hover small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Job Title</th>
+                                <th>Source</th>
+                                <th>Location</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for job in jobs %}
+                            <tr>
+                                <td>{{ job.id }}</td>
+                                <td>
+                                    <a href="/jobs/{{ job.id }}" class="fw-bold text-dark text-decoration-none">{{ job.title }}</a>
+                                    <div class="text-muted small">{{ job.company }}</div>
+                                </td>
+                                <td>
+                                    {% if job.source and job.source != 'Manual' %}
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle">{{ job.source }}</span>
+                                    {% else %}
+                                    <span class="badge bg-light text-muted border">Manual</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ job.location or '--' }}</td>
+                                <td>
+                                    <form action="/admin/jobs/delete/{{ job.id }}" method="POST" onsubmit="return confirm('Delete this job posting?');" class="d-inline">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Job">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

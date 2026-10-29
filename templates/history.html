@@ -1,0 +1,76 @@
+{% extends "base_dashboard.html" %}
+{% block page_title %}Recommendation History{% endblock %}
+{% block dashboard_content %}
+{% if history %}
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Match Score</th>
+                        <th>Missing Skills</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in history %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <a href="/jobs/{{ item.job_id }}" class="text-decoration-none fw-semibold">{{ item.title }}</a>
+                                {% if item.application_url %}
+                                <a href="{{ item.application_url }}" target="_blank" rel="noopener" class="text-secondary small" title="Open original job posting">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>{{ item.company }}</td>
+                        <td>{{ item.location or '--' }}</td>
+                        <td>
+                            <span class="badge {% if item.match_score >= 70 %}bg-success{% elif item.match_score >= 40 %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ item.match_score }}%</span>
+                        </td>
+                        <td>
+                            {% if item.missing_skills %}
+                                {% if item.missing_skills is string %}
+                                    {% for skill in item.missing_skills.split(',')[:3] %}
+                                    <span class="skill-chip missing">{{ skill.strip() }}</span>
+                                    {% endfor %}
+                                    {% if item.missing_skills.split(',')|length > 3 %}
+                                    <span class="text-muted small">+{{ item.missing_skills.split(',')|length - 3 }}</span>
+                                    {% endif %}
+                                {% else %}
+                                    {% for skill in item.missing_skills[:3] %}
+                                    <span class="skill-chip missing">{{ skill }}</span>
+                                    {% endfor %}
+                                    {% if item.missing_skills|length > 3 %}
+                                    <span class="text-muted small">+{{ item.missing_skills|length - 3 }}</span>
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                <span class="badge bg-success">None</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ item.created_at.strftime('%b %d, %Y') if item.created_at else '--' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card"><div class="card-body">
+    <div class="empty-state py-5">
+        <i class="bi bi-clock-history empty-state-icon"></i>
+        <p class="empty-state-title fw-semibold">No history yet</p>
+        <p class="empty-state-text text-muted small">Generate recommendations from your resume to see history here</p>
+        <a href="/recommendations" class="btn btn-primary mt-2">Get Recommendations</a>
+    </div>
+</div></div>
+{% endif %}
+{% endblock %}

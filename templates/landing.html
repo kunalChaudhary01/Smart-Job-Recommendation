@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Job Recommendation - AI-Powered Job Matching{% endblock %}
+
+{% block body %}
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg landing-nav py-3">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold fs-4 text-dark" href="/">
+            <i class="bi bi-briefcase-fill text-primary fs-3"></i>
+            <span>SmartJob</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#landingNavbar" aria-controls="landingNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="landingNavbar">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3">
+                <li class="nav-item">
+                    <a class="nav-link fw-medium text-dark active" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-medium text-secondary" href="#how-it-works">How It Works</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-medium text-secondary" href="#features">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-medium text-secondary" href="#about">About</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                <a href="/login" class="btn btn-outline-primary px-3">Sign In</a>
+                <a href="/signup" class="btn btn-primary px-3">Get Started</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="landing-hero">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <!-- Left Column: Copy & Actions -->
+            <div class="col-lg-6">
+                <div class="hero-badge">
+                    <i class="bi bi-stars"></i>
+                    <span>Next-Gen Career Intelligence</span>
+                </div>
+                <h1 class="hero-title">Find Your Dream Job with AI-Powered Recommendations</h1>
+                <p class="hero-subtitle">
+                    Upload your resume and let our intelligent matching engine evaluate your skills, uncover gaps, and deliver precision-ranked job recommendations tailored specifically for you.
+                </p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="/signup" class="btn btn-primary btn-lg px-4 py-2">
+                        Get Started <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                    <a href="#features" class="btn btn-outline-secondary btn-lg px-4 py-2">
+                        Explore Features
+                    </a>
+                </div>
+                <div class="d-flex align-items-center gap-4 text-secondary pt-3 border-top">
+                    <div>
+                        <div class="fw-bold text-dark fs-5">98%</div>
+                        <small>Matching Precision</small>
+                    </div>
+                    <div class="border-end pe-4"></div>
+                    <div>
+                        <div class="fw-bold text-dark fs-5">10k+</div>
+                        <small>Active Roles Analyzed</small>
+                    </div>
+                    <div class="border-end pe-4"></div>
+                    <div>
+                        <div class="fw-bold text-dark fs-5">100%</div>
+                        <small>Data Privacy</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Interactive Card Preview -->
+            <div class="col-lg-6">
+                <div class="landing-card-preview">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="spinner-grow spinner-grow-sm text-success" role="status"></span>
+                            <span class="fw-bold text-dark">Live AI Match Scores</span>
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Top Matches</span>
+                    </div>
+
+                    <!-- Sample Job 1 -->
+                    <div class="p-3 mb-3 bg-light rounded-3 border">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1 fw-bold text-dark">Senior Full-Stack Engineer</h6>
+                                <p class="mb-1 text-muted small"><i class="bi bi-building me-1"></i>Stripe &bull; <i class="bi bi-geo-alt me-1"></i>San Francisco (Remote)</p>
+                            </div>
+                            <span class="badge bg-success text-white px-2 py-1">94% Match</span>
+                        </div>
+                        <div class="progress mt-2 mb-2" style="height: 6px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 94%;" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 align-items-center">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle small"><i class="bi bi-check me-1"></i>Python</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle small"><i class="bi bi-check me-1"></i>Flask</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle small"><i class="bi bi-check me-1"></i>MySQL</span>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle small"><i class="bi bi-x me-1"></i>Docker</span>
+                        </div>
+                    </div>
+
+                    <!-- Sample Job 2 -->
+                    <div class="p-3 mb-3 bg-light rounded-3 border">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1 fw-bold text-dark">Machine Learning Scientist</h6>
+                                <p class="mb-1 text-muted small"><i class="bi bi-building me-1"></i>Anthropic &bull; <i class="bi bi-geo-alt me-1"></i>Remote</p>
+                            </div>
+                            <span class="badge bg-success text-white px-2 py-1">86% Match</span>
+                        </div>
+                        <div class="progress mt-2 mb-2" style="height: 6px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 86%;" aria-valuenow="86" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 align-items-center">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle small"><i class="bi bi-check me-1"></i>scikit-learn</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle small"><i class="bi bi-check me-1"></i>NLP</span>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle small"><i class="bi bi-x me-1"></i>PyTorch</span>
+                        </div>
+                    </div>
+
+                    <!-- Sample Job 3 -->
+                    <div class="p-3 bg-light rounded-3 border">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1 fw-bold text-dark">Backend Cloud Architect</h6>
+                                <p class="mb-1 text-muted small"><i class="bi bi-building me-1"></i>AWS &bull; <i class="bi bi-geo-alt me-1"></i>Seattle, WA</p>
+                            </div>
+                            <span class="badge bg-warning text-dark px-2 py-1">68% Match</span>
+                        </div>
+                        <div class="progress mt-2 mb-2" style="height: 6px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 68%;" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 align-items-center">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle small"><i class="bi bi-check me-1"></i>AWS</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle small"><i class="bi bi-check me-1"></i>REST APIs</span>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle small"><i class="bi bi-x me-1"></i>Kubernetes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5" id="how-it-works">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill fw-semibold mb-2">Simple Workflow</span>
+            <h2 class="fw-bold text-dark">How It Works in 3 Easy Steps</h2>
+            <p class="text-secondary mx-auto" style="max-width: 580px;">From resume upload to matched job openings, our automated system makes job hunting effortless and data-driven.</p>
+        </div>
+        <div class="row g-4">
+            <!-- Step 1 -->
+            <div class="col-md-4">
+                <div class="step-card">
+                    <span class="step-number">1</span>
+                    <div class="step-icon">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Upload Resume</h5>
+                    <p class="text-secondary small mb-0">Upload your PDF or DOCX resume. Our high-accuracy parser instantly extracts your professional credentials and key competencies.</p>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="col-md-4">
+                <div class="step-card">
+                    <span class="step-number">2</span>
+                    <div class="step-icon">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">AI Analyzes Skills</h5>
+                    <p class="text-secondary small mb-0">Natural Language Processing and TF-IDF similarity vectors evaluate your skill stack against thousands of live job listings.</p>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="col-md-4">
+                <div class="step-card">
+                    <span class="step-number">3</span>
+                    <div class="step-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Get Matched</h5>
+                    <p class="text-secondary small mb-0">Explore ranked job recommendations complete with match percentages, transparent skill gap breakdowns, and direct apply links.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-white border-top border-bottom" id="features">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill fw-semibold mb-2">Core Features</span>
+            <h2 class="fw-bold text-dark">Engineered for Your Career Growth</h2>
+            <p class="text-secondary mx-auto" style="max-width: 580px;">Everything you need to discover opportunities where you have a genuine competitive advantage.</p>
+        </div>
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">AI-Powered Matching</h5>
+                    <p class="text-secondary small mb-0">Mathematical cosine similarity and scikit-learn models rank postings objectively based on exact and semantic skill alignment.</p>
+                </div>
+            </div>
+            <!-- Feature 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Skill Gap Analysis</h5>
+                    <p class="text-secondary small mb-0">Know exactly what skills you're missing before you apply. Close the gap with targeted learning to raise your qualification rate.</p>
+                </div>
+            </div>
+            <!-- Feature 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <i class="bi bi-funnel"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Smart Filters</h5>
+                    <p class="text-secondary small mb-0">Narrow opportunities by specialized category, work style (Remote, Full-time), location, and required experience level.</p>
+                </div>
+            </div>
+            <!-- Feature 4 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Resume Parsing</h5>
+                    <p class="text-secondary small mb-0">Automated text extraction processes structured and unstructured documents seamlessly, identifying technical skills instantly.</p>
+                </div>
+            </div>
+            <!-- Feature 5 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <i class="bi bi-bookmark-star"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Save & Track</h5>
+                    <p class="text-secondary small mb-0">Bookmark enticing opportunities with one click and monitor your application journey from a consolidated dashboard.</p>
+                </div>
+            </div>
+            <!-- Feature 6 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <i class="bi bi-lightbulb"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Career Insights</h5>
+                    <p class="text-secondary small mb-0">Receive historic match metrics and dynamic suggestions to optimize your profile for higher employer conversion.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="py-5" id="about">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill fw-semibold mb-3">About SmartJob</span>
+                <h2 class="fw-bold text-dark mb-3">Bridging Candidates and Roles with Transparent AI</h2>
+                <p class="text-secondary mb-3">
+                    Smart Job Recommendation System is an open and transparent job intelligence platform. Traditional keyword search filters often overlook true talent or overwhelm job seekers with hundreds of irrelevant results.
+                </p>
+                <p class="text-secondary mb-4">
+                    Our platform utilizes state-of-the-art NLP, TF-IDF vectorization, and cosine similarity algorithms to pair your authentic competencies with verified company requirements. With explicit skill gap reporting, you always know where you stand and what to learn next.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="/signup" class="btn btn-primary">Start Matching Now</a>
+                    <a href="/jobs" class="btn btn-outline-secondary">Browse Open Roles</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card p-4 border-0 shadow-sm bg-primary text-white rounded-4">
+                    <h4 class="fw-bold mb-3"><i class="bi bi-shield-check me-2"></i>Built with Modern Tech Stack</h4>
+                    <p class="text-white-50 mb-4">Crafted using Python Flask, Scikit-Learn machine learning, robust MySQL relational persistence, and clean Bootstrap 5.3 interface components.</p>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="p-3 bg-white bg-opacity-10 rounded-3">
+                                <div class="fs-4 fw-bold">Python & Flask</div>
+                                <small class="text-white-50">Robust Web Services</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-white bg-opacity-10 rounded-3">
+                                <div class="fs-4 fw-bold">Scikit-Learn</div>
+                                <small class="text-white-50">Vector Cosine Matching</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-white bg-opacity-10 rounded-3">
+                                <div class="fs-4 fw-bold">MySQL</div>
+                                <small class="text-white-50">Relational Database</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-white bg-opacity-10 rounded-3">
+                                <div class="fs-4 fw-bold">Bootstrap 5.3</div>
+                                <small class="text-white-50">Responsive Experience</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="landing-footer">
+    <div class="container">
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="bi bi-briefcase-fill text-primary fs-3"></i>
+                    <span class="fs-4 fw-bold text-white">SmartJob</span>
+                </div>
+                <p class="text-secondary small">
+                    AI-powered job matching system delivering personalized career recommendations, skill gap insights, and streamlined application tracking.
+                </p>
+            </div>
+            <div class="col-6 col-lg-2 offset-lg-2">
+                <h6 class="text-white fw-bold mb-3">Navigation</h6>
+                <ul class="list-unstyled small mb-0 d-flex flex-direction-column flex-column gap-2">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-lg-2">
+                <h6 class="text-white fw-bold mb-3">Get Started</h6>
+                <ul class="list-unstyled small mb-0 d-flex flex-column gap-2">
+                    <li><a href="/login">Sign In</a></li>
+                    <li><a href="/signup">Create Account</a></li>
+                    <li><a href="/jobs">Browse Jobs</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2">
+                <h6 class="text-white fw-bold mb-3">Platform</h6>
+                <div class="d-flex gap-3 fs-5">
+                    <a href="#" class="text-secondary"><i class="bi bi-github"></i></a>
+                    <a href="#" class="text-secondary"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="text-secondary"><i class="bi bi-twitter-x"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-top border-secondary border-opacity-25 pt-4 text-center text-secondary small">
+            &copy; 2026 SmartJob Recommendation System. All rights reserved.
+        </div>
+    </div>
+</footer>
+{% endblock %}

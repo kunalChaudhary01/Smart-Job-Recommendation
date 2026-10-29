@@ -1,0 +1,139 @@
+{% extends "base_dashboard.html" %}
+{% block page_title %}Job Recommendations{% endblock %}
+{% block dashboard_content %}
+<p class="text-muted small mb-3"><i class="bi bi-info-circle me-1"></i>Match scores are based on text similarity between your resume and job descriptions. They do not guarantee job suitability.</p>
+
+{% if not has_resume %}
+<div class="card">
+    <div class="card-body">
+        <div class="empty-state py-5">
+            <i class="bi bi-file-earmark-arrow-up empty-state-icon"></i>
+            <p class="empty-state-title fw-semibold">Upload a resume first</p>
+            <p class="empty-state-text text-muted small">We need your resume to generate personalized job recommendations</p>
+            <a href="/upload" class="btn btn-primary"><i class="bi bi-upload me-1"></i>Upload Resume</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="/recommendations" class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small">Search</label>
+                <input type="text" name="q" class="form-control" placeholder="Job title or company..." value="{{ q }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">Category</label>
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat }}" {% if category == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">Job Type</label>
+                <select name="job_type" class="form-select">
+                    <option value="">All Types</option>
+                    {% for jt in job_types %}
+                    <option value="{{ jt }}" {% if job_type == jt %}selected{% endif %}>{{ jt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">Experience</label>
+                <select name="experience_level" class="form-select">
+                    <option value="">All Levels</option>
+                    {% for el in experience_levels %}
+                    <option value="{{ el }}" {% if experience_level == el %}selected{% endif %}>{{ el }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Filter</button>
+                <a href="/recommendations" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Results -->
+<p class="text-muted mb-3">{{ total_count }} recommendation{{ 's' if total_count != 1 else '' }} found</p>
+
+{% if recommendations %}
+<div class="row g-3">
+    {% for job in recommendations %}
+    <div class="col-lg-6">
+        <div class="card job-card h-100">
+            <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <a href="/jobs/{{ job.job_id }}" class="job-title text-decoration-none fw-semibold fs-5">{{ job.title }}</a>
+                        <div class="job-company text-muted small"><i class="bi bi-building me-1"></i>{{ job.company }}</div>
+                    </div>
+                    <div class="match-score fw-bold fs-5 {% if job.score >= 70 %}text-success{% elif job.score >= 40 %}text-warning{% else %}text-danger{% endif %}">
+                        {{ job.score }}%
+                    </div>
+                </div>
+                <div class="job-meta mb-2 small text-muted d-flex flex-wrap gap-2">
+                    {% if job.location %}<span class="job-meta-item"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</span>{% endif %}
+                    <span class="job-meta-item"><i class="bi bi-briefcase me-1"></i>{{ job.job_type }}</span>
+                    <span class="job-meta-item"><i class="bi bi-bar-chart me-1"></i>{{ job.experience_level }}</span>
+                </div>
+                <div class="match-bar mb-3">
+                    <div class="match-bar-fill {% if job.score >= 70 %}bg-success{% elif job.score >= 40 %}bg-warning{% else %}bg-danger{% endif %}" style="width:{{ job.score }}%"></div>
+                </div>
+                {% if job.matching_skills %}
+                <div class="mb-2">
+                    <small class="text-muted d-block mb-1">Matching Skills:</small>
+                    {% for skill in job.matching_skills[:6] %}
+                    <span class="skill-chip matched">{{ skill }}</span>
+                    {% endfor %}
+                    {% if job.matching_skills|length > 6 %}<small class="text-muted">+{{ job.matching_skills|length - 6 }} more</small>{% endif %}
+                </div>
+                {% endif %}
+                {% if job.missing_skills %}
+                <div class="mb-2">
+                    <small class="text-muted d-block mb-1">Skills to Develop:</small>
+                    {% for skill in job.missing_skills[:4] %}
+                    <span class="skill-chip missing">{{ skill }}</span>
+                    {% endfor %}
+                    {% if job.missing_skills|length > 4 %}<small class="text-muted">+{{ job.missing_skills|length - 4 }} more</small>{% endif %}
+                </div>
+                {% endif %}
+                <div class="d-flex flex-wrap justify-content-between align-items-center mt-auto pt-3 border-top">
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="/jobs/{{ job.job_id }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye me-1"></i>View Details</a>
+                        {% if job.application_url %}
+                        <a href="/jobs/{{ job.job_id }}/redirect" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary" title="Open original job posting / employer page">
+                            <i class="bi bi-box-arrow-up-right me-1"></i>Original Link
+                        </a>
+                        {% endif %}
+                    </div>
+                    <form action="/jobs/save/{{ job.job_id }}" method="POST" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm {% if job.job_id in saved_job_ids %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+                            <i class="bi {% if job.job_id in saved_job_ids %}bi-bookmark-fill{% else %}bi-bookmark{% endif %} me-1"></i>
+                            {% if job.job_id in saved_job_ids %}Saved{% else %}Save{% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body">
+        <div class="empty-state py-4">
+            <i class="bi bi-search empty-state-icon"></i>
+            <p class="empty-state-title fw-semibold">No matching jobs found</p>
+            <p class="empty-state-text text-muted small">Try adjusting your filters or upload a different resume</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

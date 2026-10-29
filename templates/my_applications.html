@@ -1,0 +1,128 @@
+{% extends "base_dashboard.html" %}
+
+{% block page_title %}My Applications{% endblock %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <p class="text-muted mb-0">Track and monitor all the opportunities you've applied to in real-time.</p>
+    </div>
+    <a href="/jobs" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-search me-1"></i>Explore More Jobs
+    </a>
+</div>
+
+{% if applications %}
+<div class="row g-4">
+    {% for app in applications %}
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-sm border-0" style="border-radius: 12px; background: #ffffff;">
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h5 class="fw-bold mb-1">
+                                <a href="/jobs/{{ app.job_id }}" class="text-dark text-decoration-none hover-primary">
+                                    {{ app.title }}
+                                </a>
+                            </h5>
+                            <p class="text-muted mb-2 small"><i class="bi bi-building me-1"></i>{{ app.company }}</p>
+                        </div>
+                        <div>
+                            {% if app.status == 'Applied' %}
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill">
+                                    <i class="bi bi-send me-1"></i>Applied
+                                </span>
+                            {% elif app.status == 'Under Review' %}
+                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill">
+                                    <i class="bi bi-eye me-1"></i>Under Review
+                                </span>
+                            {% elif app.status == 'Interview' %}
+                                <span class="badge bg-info-subtle text-info border border-info-subtle px-3 py-2 rounded-pill">
+                                    <i class="bi bi-calendar-event me-1"></i>Interview
+                                </span>
+                            {% elif app.status == 'Accepted' %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
+                                    <i class="bi bi-check-circle me-1"></i>Accepted
+                                </span>
+                            {% elif app.status == 'Rejected' %}
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                                    <i class="bi bi-x-circle me-1"></i>Rejected
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary px-3 py-2 rounded-pill">{{ app.status }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 text-muted small my-3">
+                        {% if app.location %}
+                        <span><i class="bi bi-geo-alt me-1"></i>{{ app.location }}</span>
+                        {% endif %}
+                        <span class="text-muted">•</span>
+                        <span><i class="bi bi-briefcase me-1"></i>{{ app.job_type }}</span>
+                        {% if app.salary_lpa %}
+                        <span class="text-muted">•</span>
+                        <span><i class="bi bi-currency-rupee me-1"></i>{{ app.salary_lpa }} LPA</span>
+                        {% endif %}
+                    </div>
+
+                    {% if app.resume_name %}
+                    <div class="p-2 mb-3 bg-light rounded d-flex align-items-center gap-2 small">
+                        <i class="bi bi-file-earmark-pdf text-danger fs-5"></i>
+                        <span class="text-truncate">Attached Resume: <strong>{{ app.resume_name }}</strong></span>
+                    </div>
+                    {% endif %}
+
+                    {% if app.cover_note %}
+                    <div class="mb-3">
+                        <small class="text-muted fw-bold d-block mb-1">Your Note:</small>
+                        <p class="small text-secondary bg-light p-2 rounded mb-0 fst-italic">"{{ app.cover_note }}"</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="pt-3 border-top d-flex flex-wrap justify-content-between align-items-center mt-3">
+                    <small class="text-muted">
+                        Applied on {{ app.applied_at.strftime('%b %d, %Y') if app.applied_at else '' }}
+                    </small>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="/jobs/{{ app.job_id }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye me-1"></i>View Job
+                        </a>
+                        {% if app.application_url %}
+                        <a href="/jobs/{{ app.job_id }}/redirect" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary" title="Visit original job listing / employer portal">
+                            <i class="bi bi-box-arrow-up-right me-1"></i>Original Link
+                        </a>
+                        {% endif %}
+                        {% if app.status == 'Applied' %}
+                        <form action="/applications/{{ app.application_id }}/withdraw" method="POST" onsubmit="return confirm('Are you sure you want to withdraw this application?');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Withdraw</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card border-0 shadow-sm" style="border-radius: 12px;">
+    <div class="card-body text-center py-5">
+        <i class="bi bi-send-x display-3 text-muted"></i>
+        <h5 class="fw-bold mt-3">No Applications Yet</h5>
+        <p class="text-muted mb-4">You haven't submitted any job applications yet. Browse recommended jobs and apply directly with your resume.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/recommendations" class="btn btn-primary px-4">
+                <i class="bi bi-stars me-1"></i>View Recommendations
+            </a>
+            <a href="/jobs" class="btn btn-outline-secondary px-4">
+                <i class="bi bi-briefcase me-1"></i>Browse All Jobs
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

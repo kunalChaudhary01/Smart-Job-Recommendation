@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Smart Job Recommendation{% endblock %}
+
+{% block body %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <i class="bi bi-briefcase-fill"></i>
+            <h2>SmartJob</h2>
+        </div>
+        <h4 class="auth-title">Create your account</h4>
+        <p class="auth-subtitle">Start getting personalized job recommendations</p>
+        
+        <form method="POST" novalidate>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" name="name" class="form-control" placeholder="John Doe" required autocomplete="name">
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Email Address</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" name="email" class="form-control" placeholder="you@example.com" required autocomplete="email">
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" class="form-control" placeholder="Create a strong password" required id="signupPasswordInput" autocomplete="new-password">
+                    <button type="button" class="input-group-text password-toggle" data-target="signupPasswordInput" aria-label="Toggle password visibility">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                    <input type="password" name="confirm_password" class="form-control" placeholder="Confirm your password" required id="confirmPasswordInput" autocomplete="new-password">
+                    <button type="button" class="input-group-text password-toggle" data-target="confirmPasswordInput" aria-label="Toggle confirm password visibility">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 mb-3">Create Account</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p class="mb-0">Already have an account? <a href="/login" class="fw-semibold">Sign In</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
