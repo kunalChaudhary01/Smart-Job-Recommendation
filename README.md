@@ -4,21 +4,21 @@ An AI-powered web application that matches job seekers with relevant job opportu
 
 ## Features
 
-- **AI-Powered Job Matching**: Upload your resume and get personalized job recommendations based on skill analysis
-- **Resume Parsing**: Automatic text extraction and skill identification from PDF resumes
-- **Skill Gap Analysis**: See matching and missing skills for each job
-- **Job Browsing**: Search, filter, and sort through available positions
-- **Save Jobs**: Bookmark interesting positions for later review
-- **Profile Management**: Maintain your professional profile and skills
-- **Admin Panel**: Add and manage job listings
+- **AI-Powered Job Matching:** Upload your resume and get personalized job recommendations based on skill analysis.
+- **Resume Parsing:** Automatic text extraction and skill identification from PDF resumes.
+- **Skill Gap Analysis:** See matching and missing skills for each job.
+- **Job Browsing:** Search, filter, and sort available positions.
+- **Save Jobs:** Bookmark interesting positions for later review.
+- **Profile Management:** Maintain your professional profile and skills.
+- **Admin Panel:** Add and manage job listings.
 
 ## Technology Stack
 
-- **Backend**: Python, Flask
-- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap 5
-- **Database**: MySQL
-- **ML/NLP**: scikit-learn (TF-IDF), NLTK, Pandas
-- **Resume Parsing**: PyPDF2
+- **Backend:** Python, Flask
+- **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
+- **Database:** MySQL
+- **Machine Learning/NLP:** scikit-learn (TF-IDF), NLTK, Pandas
+- **Resume Parsing:** PyPDF2
 
 ## Prerequisites
 
@@ -28,27 +28,42 @@ An AI-powered web application that matches job seekers with relevant job opportu
 
 ## Setup Instructions
 
-### 1. Clone the repository
+### 1. Clone the Repository
+
 ```bash
-git clone <repository-url>
-cd smart-job-recommendation
+git clone https://github.com/kunalChaudhary01/Smart-Job-Recommendation.git
+cd Smart-Job-Recommendation
 ```
 
-### 2. Create virtual environment
+### 2. Create a Virtual Environment
+
 ```bash
 python -m venv venv
-venv\Scripts\activate  # Windows
-source venv/bin/activate  # macOS/Linux
 ```
 
-### 3. Install dependencies
+On Windows:
+
+```powershell
+venv\Scripts\activate
+```
+
+On macOS/Linux:
+
+```bash
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure environment variables
+### 4. Configure Environment Variables
+
 Create a `.env` file in the project root:
-```
+
+```env
 SECRET_KEY=your-secret-key-here
 DB_HOST=localhost
 DB_USER=root
@@ -56,70 +71,62 @@ DB_PASSWORD=your-mysql-password
 DB_NAME=smart_jobs
 ```
 
-### 5. Initialize the database
-Run the schema in MySQL:
+Replace the example values with your actual configuration. Never commit real passwords, API keys, or secrets to GitHub.
+
+### 5. Initialize the Database
+
+If your project includes `database/schema.sql`, run:
+
 ```bash
 mysql -u root -p < database/schema.sql
 ```
 
-### 6. Seed sample jobs (optional)
+### 6. Seed Sample Jobs (Optional)
+
+If your project includes the seed script, run:
+
 ```bash
 python -m database.seed_jobs
 ```
 
-### 7. Run the application
+### 7. Run the Application
+
 ```bash
 python app.py
 ```
 
-Open http://localhost:5000 in your browser.
+Open `http://localhost:5000` in your browser.
 
 ## Project Structure
 
-```
+```text
 smart-job-recommendation/
-├── app.py                    # Flask application factory
-├── config.py                 # Configuration
-├── .env                      # Environment variables
-├── requirements.txt          # Python dependencies
+├── app.py
+├── config.py
+├── requirements.txt
 ├── database/
-│   ├── db_config.py          # Database connection
-│   ├── schema.sql            # Database schema
-│   └── seed_jobs.py          # Sample job data
+│   ├── db_config.py
+│   ├── schema.sql
+│   └── seed_jobs.py
 ├── routes/
-│   ├── main_routes.py        # Landing page
-│   ├── auth_routes.py        # Authentication
-│   ├── dashboard_routes.py   # Dashboard
-│   ├── resume_routes.py      # Resume upload
-│   ├── recommendation_routes.py  # Job recommendations
-│   ├── job_routes.py         # Job browsing & details
-│   ├── saved_jobs_routes.py  # Saved jobs
-│   ├── profile_routes.py     # User profile
-│   ├── history_routes.py     # Recommendation history
-│   └── admin_routes.py       # Admin job management
 ├── utils/
-│   ├── recommender.py        # TF-IDF recommendation engine
-│   ├── resume_parser.py      # PDF text extraction
-│   ├── skill_gap.py          # Skill extraction & matching
-│   ├── text_preprocessor.py  # Text cleaning
-│   └── decorators.py         # Auth decorators
-├── templates/                # Jinja2 HTML templates
+├── templates/
 ├── static/
-│   ├── css/style.css         # Custom styles
-│   └── js/main.js            # Client-side JavaScript
-└── uploads/                  # Uploaded resumes (gitignored)
+└── uploads/
 ```
+
+The directory structure above is illustrative. Your actual project may contain additional files and folders.
 
 ## How the Recommendation Engine Works
 
-1. User uploads a PDF resume
-2. Text is extracted using PyPDF2
-3. Skills are identified from the resume text
-4. TF-IDF vectors are computed for the resume and all job descriptions
-5. Cosine similarity scores determine how well the resume matches each job
-6. Top 10 matches are returned with matching/missing skill analysis
+1. The user uploads a PDF resume.
+2. Text is extracted using PyPDF2.
+3. Skills are identified from the resume text.
+4. TF-IDF vectors are computed for the resume and job descriptions.
+5. Cosine similarity scores determine how well the resume matches each job.
+6. The top 10 matches are returned with matching and missing skill analysis.
 
-> **Note**: Match scores represent text similarity between your resume and job descriptions. They are not a guarantee of job suitability.
+**Note:** Match scores represent text similarity between a resume and job descriptions. They do not guarantee job suitability.
 
 ## License
 
